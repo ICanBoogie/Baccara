@@ -1,0 +1,74 @@
+#!/usr/bin/env php
+<?php
+
+namespace ICanBoogie\Baccara;
+
+require __DIR__ . '/vendor/autoload.php';
+
+if (empty($argv[1]))
+{
+	echo "should print usage\n";
+}
+
+$baccara = new Baccara;
+
+$baccara->commands->attach_many([
+
+	'packages' => function(CommandDefinition $definition) {
+
+		$definition->handler = Command\PackagesCommand::class;
+
+	},
+
+	'clear cache' => function(CommandDefinition $definition) {
+
+		$definition->handler = Command\CacheClearCommand::class;
+
+	},
+
+	'events' => function(CommandDefinition $definition) {
+
+		$definition->handler = Command\EventsCommand::class;
+
+	},
+
+	'generate controller :name ?action' => function(CommandDefinition $definition) {
+
+		$definition->handler = Command\OptimizeCommand::class;
+		$definition->options->boolean('dry-run', 'dr');
+
+	}
+
+]);
+
+$baccara->commands->map($argv);
+
+
+
+
+exit;
+
+
+
+$commands = [
+
+	'optimize' => Command\OptimizeCommand::class,
+	'packages' => Command\PackagesCommandAbstract::class
+
+];
+
+$command_name = $argv[1];
+
+if (empty($commands[$command_name]))
+{
+	throw new \InvalidArgumentException("Unknown command: $command_name");
+}
+
+$baccara = (object) [
+
+	'root' => $root
+
+];
+
+$command = new $commands[$command_name]($baccara);
+$command($argv);
