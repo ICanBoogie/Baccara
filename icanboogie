@@ -10,8 +10,17 @@ if (empty($argv[1]))
 	echo "should print usage\n";
 }
 
-$baccara = new Baccara;
+$baccara = new Baccara([
 
+	'packages' => Command\PackagesCommand::class,
+	'clear cache' => Command\CacheClearCommand::class,
+	'events' => Command\EventsCommand::class,
+	'optimize' => Command\OptimizeCommand::class,
+	'serve' => Command\ServeCommand::class,
+
+]);
+
+/*
 $baccara->commands->attach_many([
 
 	'packages' => function(CommandDefinition $definition) {
@@ -40,8 +49,9 @@ $baccara->commands->attach_many([
 	}
 
 ]);
+*/
 
-$baccara->commands->map($argv);
+$baccara(array_slice($argv, 1));
 
 
 

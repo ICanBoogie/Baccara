@@ -2,73 +2,64 @@
 
 namespace ICanBoogie\Baccara;
 
-use ICanBoogie\Baccara\Command\Pattern;
-
 class CommandCollection
 {
 	/**
-	 * @var CommandDefinition[]
+	 * @var array
 	 */
 	private $definitions;
 
 	/**
-	 * @var Baccara
+	 * @param array $commands
 	 */
-	private $baccara;
-
-	public function __construct(Baccara $baccara)
+	public function __construct(array $commands)
 	{
-		$this->baccara = $baccara;
+		$this->attach_many($commands);
 	}
 
 	/**
-	 * @param string $pattern
-	 * @param callable $construct
+	 * @param string $path
+	 * @param string $class_or_command
 	 */
-	public function attach($pattern, callable $construct)
+	public function attach($path, $class_or_command)
 	{
-		$definition = new CommandDefinition;
-		$construct($definition);
-
-		$this->definitions[$pattern] = $definition;
+		$this->definitions[$path] = $class_or_command;
 	}
 
+	/**
+	 * @param array $array
+	 */
 	public function attach_many(array $array)
 	{
-		foreach ($array as $pattern => $construct)
+		foreach ($array as $path => $class_or_command)
 		{
-			$this->attach($pattern, $construct);
+			$this->attach($path, $class_or_command);
 		}
 	}
 
-	public function map(array $argv)
+	public function find_matches($request)
 	{
-		array_shift($argv);
+		$matches = [];
+		$request_parts_number = count($request);
 
-		foreach ($this->definitions as $pattern => $definition)
+		foreach ($this->definitions as $path => $class_or_command)
 		{
-			$parsed_pattern = Pattern::from($pattern);
+			$path_parts = explode(' ', $path);
+			$path_parts_number = count($path_parts);
 
-			$match = $parsed_pattern->match($argv);
-
-			if ($match)
+			if ($request_parts_number < $path_parts_number)
 			{
-				list($command, $arguments, $remainder) = $match;
-
-				return $this->execute($definition, $arguments, $remainder);
+				continue;
 			}
-		}
-	}
 
-	protected function execute(CommandDefinition $definition, $arguments, $remainder)
-	{
-		$handler = $definition->handler;
+			if (array_slice($request, 0, $path_parts_number) !== $path_parts)
+			{
+				continue;
+			}
 
-		if (is_string($handler) && class_exists($handler))
-		{
-			$handler = new $handler($this->baccara);
+			$matches[$path] = [ $class_or_command, array_slice($request, $path_parts_number) ];
 		}
 
-		return $handler($arguments);
+		return $matches;
 	}
 }

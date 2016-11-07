@@ -2,17 +2,21 @@
 
 namespace ICanBoogie\Baccara\Command;
 
-class OptimizeCommand
+use ICanBoogie\Core;
+use ICanBoogie\HTTP\Request;
+
+class OptimizeCommand extends AbstractCommand
 {
-    public function __invoke()
+    public function __invoke(array $args)
     {
+        /*
         $boot = 'Icybee\boot';
 
         if (!function_exists($boot))
         {
             $boot = 'ICanBoogie\boot';
         }
-
+		*/
         $routes = [
 
             '/api/ping/',
@@ -24,22 +28,32 @@ class OptimizeCommand
 
         $root = getcwd();
         $root_length = strlen($root);
+	    $relative_pathname = 'vendor/icanboogie-combined.php';
+	    $destination = $root . DIRECTORY_SEPARATOR . $relative_pathname;
+
+	    if (file_exists($destination))
+	    {
+		    echo "Unlink previous file: $relative_pathname\n";
+
+		    unlink($destination);
+	    }
+
 
         require $root . DIRECTORY_SEPARATOR . 'vendor/autoload.php';
 
-        $initial_classes = get_declared_classes();
-        $initial_traits = get_declared_traits();
-        $initial_interfaces = get_declared_interfaces();
+	    $initial_classes = get_declared_classes();
+	    $initial_traits = get_declared_traits();
+	    $initial_interfaces = get_declared_interfaces();
+
+	    $app = $this->baccara->app;
 
 #
-
-        $app = $boot();
 
         new Core\ClearCacheEvent($app);
 
         foreach ($routes as $route)
         {
-            $request = HTTP\Request::from($route);
+            $request = Request::from($route);
 
             try
             {
@@ -150,6 +164,8 @@ class OptimizeCommand
         }
 
         arsort($weights);
+
+	    echo implode("\n", array_keys($weights)) . "\n";
 
         $files = [];
 

@@ -2,9 +2,7 @@
 
 namespace ICanBoogie\Baccara\Command;
 
-use ICanBoogie\Baccara\CommandAbstract;
-
-class PackagesCommand extends CommandAbstract
+class PackagesCommand extends AbstractCommand
 {
 	public function __invoke(array $arguments)
 	{

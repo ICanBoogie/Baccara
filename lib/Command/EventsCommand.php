@@ -2,9 +2,9 @@
 
 namespace ICanBoogie\Baccara\Command;
 
-use ICanBoogie\Baccara\CommandAbstract;
+use ICanBoogie\Baccara\Command\AbstractCommand;
 
-class EventsCommand extends CommandAbstract
+class EventsCommand extends AbstractCommand
 {
 	/**
 	 * @inheritdoc

@@ -2,10 +2,9 @@
 
 namespace ICanBoogie\Baccara\Command;
 
-use ICanBoogie\Baccara\CommandAbstract;
 use ICanBoogie\Core\ClearCacheEvent;
 
-class CacheClearCommand extends CommandAbstract
+class CacheClearCommand extends AbstractCommand
 {
 	/**
 	 * @inheritdoc
@@ -16,9 +15,11 @@ class CacheClearCommand extends CommandAbstract
 
 		$event = new ClearCacheEvent($app);
 
-		foreach ($event->used_by as $hooks)
+		foreach ($event->used_by as list($hook, $started_at, $finished_at))
 		{
-			echo "Event hook invoked: $hooks\n";
+			$time = sprintf("%.3f µs", $finished_at - $started_at);
+
+			echo "Invoked: $hook ($time)\n";
 		}
 	}
 }
