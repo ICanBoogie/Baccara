@@ -16,7 +16,7 @@ $baccara = new Baccara([
 	'clear cache' => Command\CacheClearCommand::class,
 	'events' => Command\EventsCommand::class,
 	'optimize' => Command\OptimizeCommand::class,
-	'serve' => Command\ServeCommand::class,
+	'run' => Command\RunCommand::class,
 
 ]);
 

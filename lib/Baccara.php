@@ -3,7 +3,7 @@
 namespace ICanBoogie\Baccara;
 
 /**
- * @property-read \ICanBoogie\Core $app
+ * @property-read \ICanBoogie\Application $app
  * @property-read CommandCollection $commands
  */
 class Baccara
@@ -19,7 +19,7 @@ class Baccara
 	}
 
 	/**
-	 * @var \ICanBoogie\Core
+	 * @var \ICanBoogie\Application
 	 */
 	private $app;
 

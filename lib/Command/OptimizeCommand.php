@@ -2,7 +2,7 @@
 
 namespace ICanBoogie\Baccara\Command;
 
-use ICanBoogie\Core;
+use ICanBoogie\Application;
 use ICanBoogie\HTTP\Request;
 
 class OptimizeCommand extends AbstractCommand
@@ -49,7 +49,7 @@ class OptimizeCommand extends AbstractCommand
 
 #
 
-        new Core\ClearCacheEvent($app);
+        new Application\ClearCacheEvent($app);
 
         foreach ($routes as $route)
         {

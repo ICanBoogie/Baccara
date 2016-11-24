@@ -2,7 +2,7 @@
 
 namespace ICanBoogie\Baccara\Command;
 
-use ICanBoogie\Core\ClearCacheEvent;
+use ICanBoogie\Application\ClearCacheEvent;
 
 class CacheClearCommand extends AbstractCommand
 {

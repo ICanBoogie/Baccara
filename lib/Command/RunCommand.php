@@ -2,7 +2,7 @@
 
 namespace ICanBoogie\Baccara\Command;
 
-class ServeCommand extends AbstractCommand
+class RunCommand extends AbstractCommand
 {
 	/**
 	 * @inheritdoc

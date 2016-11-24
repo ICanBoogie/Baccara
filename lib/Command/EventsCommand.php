@@ -35,7 +35,7 @@ class EventsCommand extends AbstractCommand
 	}
 
 	/**
-	 * @return \ICanBoogie\Core|\App\Application
+	 * @return \ICanBoogie\Application
 	 */
 	protected function get_app()
 	{
