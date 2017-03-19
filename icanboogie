@@ -17,6 +17,7 @@ $baccara = new Baccara([
 	'events' => Command\EventsCommand::class,
 	'optimize' => Command\OptimizeCommand::class,
 	'run' => Command\RunCommand::class,
+	'prototypes' => Command\PrototypesCommand::class,
 
 ]);
 

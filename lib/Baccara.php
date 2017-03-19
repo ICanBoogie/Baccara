@@ -2,6 +2,8 @@
 
 namespace ICanBoogie\Baccara;
 
+use function ICanBoogie\app;
+
 /**
  * @property-read \ICanBoogie\Application $app
  * @property-read CommandCollection $commands
@@ -112,7 +114,9 @@ class Baccara
 
 		]);
 
-		return require_once $pathname;
+		require_once $pathname;
+
+		return app();
 	}
 
 	private function find_path(array $possible)
@@ -125,6 +129,6 @@ class Baccara
 			}
 		}
 
-		throw new \Exception("Unable to find path, tried:\n", '- ' . implode("\n- ", $possible) . "\n");
+		throw new \Exception("Unable to find path, tried:\n" . '- ' . implode("\n- ", $possible) . "\n");
 	}
 }

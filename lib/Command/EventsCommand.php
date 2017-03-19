@@ -2,43 +2,55 @@
 
 namespace ICanBoogie\Baccara\Command;
 
-use ICanBoogie\Baccara\Command\AbstractCommand;
-
 class EventsCommand extends AbstractCommand
 {
 	/**
 	 * @inheritdoc
 	 */
-	public function __invoke(array $arguments)
+	public function __invoke(array $args)
 	{
-		$app = $this->get_app();
-		$events = $app->events;
+		list($pattern) = $args;
 
-		foreach ($events as $type => $callbacks)
+		$events = iterator_to_array($this->baccara->app->events);
+
+		if ($pattern) {
+			$events = array_filter($events, function ($key) use ($pattern) {
+
+				return fnmatch('*' . $pattern . '*', $key);
+
+			}, ARRAY_FILTER_USE_KEY);
+		}
+
+		foreach ($events as $type => $hooks)
 		{
 			echo $type . PHP_EOL;
 
-			foreach ($callbacks as $callback)
+			foreach ($hooks as $hook)
 			{
-				if ($callback instanceof \Closure)
-				{
-					$reflection = new \ReflectionFunction($callback);
-
-					echo "-- " . $reflection->getFileName() . ':' . $reflection->getStartLine() . PHP_EOL;
-				}
-				else
-				{
-					echo "-- " . $callback . PHP_EOL;
-				}
+				echo " - " . $this->resolve_hook($hook) . PHP_EOL;
 			}
 		}
 	}
 
 	/**
-	 * @return \ICanBoogie\Application
+	 * @param callable $callback
+	 *
+	 * @return string
 	 */
-	protected function get_app()
+	private function resolve_hook($callback)
 	{
-		return $this->baccara->app;
+		if ($callback instanceof \Closure)
+		{
+			$reflection = new \ReflectionFunction($callback);
+
+			return $reflection->getFileName() . ':' . $reflection->getStartLine();
+		}
+
+		if (is_array($callback))
+		{
+			return implode('::', $callback);
+		}
+
+		return $callback;
 	}
 }
